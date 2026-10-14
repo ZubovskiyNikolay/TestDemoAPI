@@ -1,5 +1,4 @@
 import pytest
-import requests
 from endpoints.auth import Auth
 from endpoints.auth_token import AuthAlive
 from endpoints.create_meme import CreateMeme
@@ -7,6 +6,7 @@ from endpoints.update_meme import UpdateMeme
 from endpoints.get_many import GetManyMeme
 from endpoints.get_one import GetOneMeme
 from endpoints.delete_meme import DeleteMeme
+from data import CREATE_PAYLOAD
 
 
 @pytest.fixture()
@@ -34,16 +34,6 @@ def username(authorized):
 @pytest.fixture()
 def auth_alive_token_endpoint():
     return AuthAlive()
-
-
-@pytest.fixture()
-def meme_payload():
-    return {
-        "text": "Hello meme",
-        "url": "https://example.com/cat.jpg",
-        "tags": ["cat", "funny"],
-        "info": {"author": "Nikolay", "likes": 10},
-    }
 
 
 @pytest.fixture()
@@ -96,10 +86,9 @@ def delete_meme_endpoint_no_token():
     return DeleteMeme()
 
 
-
 @pytest.fixture()
-def create_test_meme(create_meme_endpoint, meme_payload, token):
-    create_meme_endpoint.create_new_meme(payload=meme_payload)
+def create_test_meme(create_meme_endpoint, token):
+    create_meme_endpoint.create_new_meme(payload=CREATE_PAYLOAD)
     meme_id = create_meme_endpoint.json["id"]
 
     yield meme_id
